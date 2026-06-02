@@ -307,7 +307,7 @@ htlc_accepted (struct htlc_conn *htlc)
 	 
 	htlc->flags.visible = 1;
 
-	timer_add_secs(10, login_timeout, htlc);
+	timer_add_secs(10, (int (*)())login_timeout, htlc);
 
 	if (hxd_cfg.options.ident && !htlc->flags.sock_unix) {
 		start_ident(htlc);

@@ -1,9 +1,15 @@
 #ifndef _HLSERVER_H
 #define _HLSERVER_H
 
-#if defined(HAVE_CONFIG_H)
+#if !defined(_CONFIG_H_INCLUDED) && defined(HAVE_CONFIG_H)
+#define _CONFIG_H_INCLUDED
 #include "config.h"
 #endif
+
+#ifdef RETSIGTYPE
+#undef RETSIGTYPE
+#endif
+#define RETSIGTYPE void
 
 #include "hxd.h"
 

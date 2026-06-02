@@ -1,9 +1,15 @@
 #ifndef _HXD_H
 #define _HXD_H
 
-#if defined(HAVE_CONFIG_H)
+#if !defined(_CONFIG_H_INCLUDED) && defined(HAVE_CONFIG_H)
+#define _CONFIG_H_INCLUDED
 #include "config.h"
 #endif
+
+#ifdef RETSIGTYPE
+#undef RETSIGTYPE
+#endif
+#define RETSIGTYPE void
 #if !defined(__GNUC__) || defined(__STRICT_ANSI__) || defined(__APPLE_CC__)
 #define __attribute__(x)
 #endif

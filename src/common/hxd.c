@@ -11,6 +11,7 @@
 #if !defined(__WIN32__)
 #include <sys/wait.h>
 #include <sys/ioctl.h>
+#include <arpa/inet.h>
 #endif
 #include "xmalloc.h"
 #include "hxd.h"
@@ -106,7 +107,7 @@ inaddr2str (char abuf[HOSTLEN+1], struct SOCKADDR_IN *sa)
 #ifdef CONFIG_IPV6
 	inet_ntop(AFINET, (char *)&sa->SIN_ADDR, abuf, HOSTLEN+1);
 #else
-	inet_ntoa(sa->SIN_ADDR, abuf, 16);
+	inet_ntoa_r(sa->SIN_ADDR, abuf, 16);
 #endif
 }
 
@@ -410,7 +411,8 @@ timer_check (struct timeval *before, struct timeval *after)
 		next = timer->next;
 		if (timer->expire) {
 			int keep;
-			int (*fn)() = timer->fn, *ptr = timer->ptr;
+			int (*fn)(void *) = (int (*)(void *))timer->fn;
+			void *ptr = timer->ptr;
 
 			if (prev)
 				prev->next = next;
@@ -418,7 +420,7 @@ timer_check (struct timeval *before, struct timeval *after)
 				timer_list = next;
 			keep = fn(ptr);
 			if (keep)
-				timer_add(&timer->add_tv, fn, ptr);
+				timer_add(&timer->add_tv, (int (*)())fn, ptr);
 			xfree(timer);
 			next = timer_list;
 		} else {
@@ -568,16 +570,16 @@ loopZ (void)
 			}
 			switch (last_signal) {
 				case SIGCHLD:
-					timer_add_secs(0, chld_wait, 0);
+					timer_add_secs(0, (int (*)())chld_wait, 0);
 					break;
 				case SIGHUP:
 #if defined(CONFIG_HOTLINE_SERVER) || defined(CONFIG_TRACKER_SERVER)
-					timer_add_secs(0, read_config_file, (void *)1);
+					timer_add_secs(0, (int (*)())read_config_file, (void *)1);
 #endif
 					break;
 				case SIGALRM:
 #if defined(CONFIG_HTXF_PTHREAD) && defined(CONFIG_HOTLINE_SERVER)
-					timer_add_secs(0, thread_check, 0);
+					timer_add_secs(0, (int (*)())thread_check, 0);
 #endif
 					break;
 				default:
@@ -862,7 +864,7 @@ main (int argc __attribute__((__unused__)), char **argv __attribute__((__unused_
 	tracker_register_timer(0);
 #endif
 #if defined(CONFIG_HTXF_PTHREAD)
-	timer_add_secs(5, thread_check_continuous, 0);
+	timer_add_secs(5, (int (*)())thread_check_continuous, 0);
 #endif
 #endif
 

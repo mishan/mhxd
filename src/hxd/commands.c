@@ -880,7 +880,7 @@ command_chat (struct htlc_conn *htlc, u_int32_t cid, char *chatbuf)
 				if (hxd_cfg.options.away_time) {
 					timer_delete_ptr(htlc);
 					if (!htlc->flags.away)
-						timer_add_secs(hxd_cfg.options.away_time, away_timer, htlc);
+						timer_add_secs(hxd_cfg.options.away_time, (int (*)())away_timer, htlc);
 				}
 				return;
 			} else if (!strncmp(chatbuf, "alert ", 6)) {

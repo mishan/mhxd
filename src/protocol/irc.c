@@ -27,7 +27,7 @@ go up to first strange char, add UID
 
 }
 */
-static void *
+static void
 cr_to_lf ( char *str )
 {
 	u_int8_t i = 0;
@@ -85,7 +85,8 @@ do_command (htlc_t *htlc, char *linep)
 	u_int8_t *p, *cmd, *arg, *arg2;
 	char *agbuf;
 	char nick_list[255];
-	u_int32_t fd, len;
+	u_int32_t fd;
+	size_t len;
 	//struct hl_userlist_hdr *uh;
 	struct htlc_conn *htlcp;
 	

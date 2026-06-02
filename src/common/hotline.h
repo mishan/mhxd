@@ -1,7 +1,8 @@
 #ifndef _HOTLINE_H
 #define _HOTLINE_H
 
-#if defined(HAVE_CONFIG_H)
+#if !defined(_CONFIG_H_INCLUDED) && defined(HAVE_CONFIG_H)
+#define _CONFIG_H_INCLUDED
 #include "config.h"
 #endif
 #include <sys/types.h>

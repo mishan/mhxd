@@ -1246,7 +1246,7 @@ hlclient_reap_pid (pid_t pid, int status)
 	for (i = 0; i < nxfers; i++) {
 		htxfp = xfers[i];
 		if (htxfp->tid == pid) {
-			timer_add_secs(0, free_htxf, (void *)pid);
+			timer_add_secs(0, (int (*)())free_htxf, (void *)pid);
 			return;
 		}
 	}
@@ -1821,7 +1821,7 @@ rcv_task_file_get (struct htlc_conn *htlc, struct htxf_conn *htxf)
 		if (htxf->opt.retry) {
 			htxf->gone = 0;
 			htxf->opt.retry--;
-			timer_add_secs(1, xfer_go_timer, htxf);
+			timer_add_secs(1, (int (*)())xfer_go_timer, htxf);
 		} else {
 			mutex_lock(&htlc->htxf_mutex);
 			xfer_delete(htxf);

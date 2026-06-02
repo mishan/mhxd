@@ -210,5 +210,5 @@ tracker_register_init (void)
 	pkt->__reserved0 = 0;
 	pkt->id = 0;
 
-	timer_add_secs(hxd_cfg.tracker.interval, tracker_register_timer, trackers);
+	timer_add_secs(hxd_cfg.tracker.interval, (int (*)())tracker_register_timer, trackers);
 }
