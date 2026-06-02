@@ -214,7 +214,7 @@ term_clock_timer (char *time_str)
 		strftime(time_str, sizeof(current_time_str), "%H:%M", &tm);
 	term_status();
 
-	timer_add_secs(60 - tm.tm_sec, term_clock_timer, time_str);
+	timer_add_secs(60 - tm.tm_sec, (int (*)())term_clock_timer, time_str);
 
 	return 0;
 }

@@ -110,7 +110,7 @@ queue_refresh (void)
 
 	if (refresh_in_progress)
 		timer_delete_ptr((void *)queue_refresh);
-	timer_add_secs(1, queue_refresher, (void *)queue_refresh);
+	timer_add_secs(1, (int (*)())queue_refresher, (void *)queue_refresh);
 	refresh_in_progress = 1;
 
 	mutex_unlock(&queue_mutex);

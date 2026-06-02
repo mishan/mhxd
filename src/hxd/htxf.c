@@ -1349,7 +1349,7 @@ htxf_listen_ready_read (int fd)
 	hxd_files[s].ready_write = 0;
 	hxd_files[s].conn.htxf = htxf;
 
-	timer_add_secs(8, htxf_timeout, htxf);
+	timer_add_secs(8, (int (*)())htxf_timeout, htxf);
 }
 
 void

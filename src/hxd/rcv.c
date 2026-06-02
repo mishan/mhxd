@@ -99,7 +99,7 @@ test_away (struct htlc_conn *htlc)
 	}
 	if (hxd_cfg.options.away_time && htlc->flags.away != AWAY_PERM) {
 		timer_delete_ptr(htlc);
-		timer_add_secs(hxd_cfg.options.away_time, away_timer, htlc);
+		timer_add_secs(hxd_cfg.options.away_time, (int (*)())away_timer, htlc);
 	}
 }
 
@@ -1695,7 +1695,7 @@ hxd_rcv_chat (struct htlc_conn *htlc, struct htlc_chat *chat,
 		if (hxd_cfg.options.away_time) {
 			timer_delete_ptr(htlc);
 			if (!htlc->flags.away)
-				timer_add_secs(hxd_cfg.options.away_time, away_timer, htlc);
+		timer_add_secs(hxd_cfg.options.away_time, (int (*)())away_timer, htlc);
 		}
 	}
 	if (hxd_cfg.operation.commands) {
