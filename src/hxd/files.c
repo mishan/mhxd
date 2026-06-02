@@ -12,6 +12,7 @@
 #include <fcntl.h>
 #include "hlserver.h"
 #include "xmalloc.h"
+#include "hfs.h"
 
 #if defined(HAVE_CORESERVICES)
 #include "apple/alias.h"
@@ -1891,9 +1892,16 @@ rcv_folder_get (struct htlc_conn *htlc)
 		if (S_ISDIR(sb.st_mode))
 			continue;
 		data_size = sb.st_size;
-		rsrc_size = resource_len(pathbuf);
-		size += (data_size - data_pos) + (preview ? 0 : (rsrc_size - rsrc_pos));
-		size += 133 + ((rsrc_size - rsrc_pos) ? 16 : 0) + comment_len(pathbuf);
+#if defined(CONFIG_HFS)
+		if (hxd_cfg.operation.hfs) {
+			rsrc_size = resource_len(pathbuf);
+			size += (data_size - data_pos) + (preview ? 0 : (rsrc_size - rsrc_pos));
+			size += 133 + ((rsrc_size - rsrc_pos) ? 16 : 0) + comment_len(pathbuf);
+		} else
+#endif
+		{
+			size += (data_size - data_pos) + 133;
+		}
 	}
 	closedir(dirp);
 

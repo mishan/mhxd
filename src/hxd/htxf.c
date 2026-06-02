@@ -13,9 +13,7 @@
 #include <fcntl.h>
 #include "hlserver.h"
 #include "xmalloc.h"
-#if defined(CONFIG_HFS)
 #include "hfs.h"
-#endif
 #include "threads.h"
 
 #define HTXF_BUFSIZE		0xf000
@@ -442,9 +440,17 @@ folder_getpaths (u_int32_t *npathsp, char *path)
 			pf->total_size = 0;
 		} else {
 			data_size = sb.st_size;
-			rsrc_size = resource_len(pathbuf);
-			size = (data_size - data_pos) + (preview ? 0 : (rsrc_size - rsrc_pos));
-			size += 133 + ((rsrc_size - rsrc_pos) ? 16 : 0) + comment_len(pathbuf);
+#if defined(CONFIG_HFS)
+			if (hxd_cfg.operation.hfs) {
+				rsrc_size = resource_len(pathbuf);
+				size = (data_size - data_pos) + (preview ? 0 : (rsrc_size - rsrc_pos));
+				size += 133 + ((rsrc_size - rsrc_pos) ? 16 : 0) + comment_len(pathbuf);
+			} else
+#endif
+			{
+				rsrc_size = 0;
+				size = (data_size - data_pos) + 133;
+			}
 			pf->type = 0;
 			pf->data_size = data_size;
 			pf->rsrc_size = rsrc_size;

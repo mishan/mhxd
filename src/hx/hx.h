@@ -1,9 +1,15 @@
 #ifndef __hxd_HX_H
 #define __hxd_HX_H 1
 
-#ifdef HAVE_CONFIG_H
+#if !defined(_CONFIG_H_INCLUDED) && defined(HAVE_CONFIG_H)
+#define _CONFIG_H_INCLUDED
 #include "config.h"
 #endif
+
+#ifdef RETSIGTYPE
+#undef RETSIGTYPE
+#endif
+#define RETSIGTYPE void
 #include <sys/types.h>
 #include <stdio.h>
 #include <stdarg.h>

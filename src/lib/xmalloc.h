@@ -3,7 +3,8 @@
 
 #include <sys/types.h>
 
-#if defined(HAVE_CONFIG_H)
+#if !defined(_CONFIG_H_INCLUDED) && defined(HAVE_CONFIG_H)
+#define _CONFIG_H_INCLUDED
 #include "config.h"
 #endif
 
